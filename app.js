@@ -77,7 +77,7 @@ app.post("/districts/", async (request, response) => {
   const dbResponse = await db.run(createDistrictQuery);
   const districtId = dbResponse.lastID;
   console.log(districtId);
-  response.send("District Successfully");
+  response.send("District Successfully Added");
 });
 
 // GET District API
@@ -92,7 +92,7 @@ app.get("/districts/:districtId/", async (request, response) => {
     cases: district.cases,
     cured: district.cured,
     active: district.active,
-    death: district.deaths,
+    deaths: district.deaths,
   });
 });
 
@@ -117,11 +117,8 @@ app.put("/districts/:districtId/", async (request, response) => {
     deaths,
   } = districtDetails;
 
-  const updateDistrictQuery = `INSERT 
-  INTO 
-  district(district_name,state_id,cases,cured,active,deaths)
-  VALUES('${districtName}',${stateId},${cases},${cured},${active},${deaths});`;
-
+  const updateDistrictQuery = `UPDATE district SET
+  district_name='${districtName}',state_id=${stateId},cases=${cases},cured=${cured},active=${active},deaths=${deaths} WHERE district_id=${districtId};`;
   const dbResponse = await db.run(updateDistrictQuery);
   response.send("District Details Updated");
 });
